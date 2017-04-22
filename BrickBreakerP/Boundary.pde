@@ -14,7 +14,7 @@ class Boundary {
   // But we also have to make a body for box2d to know about it
   Body b;
 
- Boundary(float x_,float y_, float w_, float h_, float a) {
+  Boundary(float x_, float y_, float w_, float h_, float a) {
     x = x_;
     y = y_;
     w = w_;
@@ -28,16 +28,17 @@ class Boundary {
     // We're just a box
     sd.setAsBox(box2dW, box2dH);
 
-
     // Create the body
     BodyDef bd = new BodyDef();
     bd.type = BodyType.STATIC;
     bd.angle = a;
-    bd.position.set(box2d.coordPixelsToWorld(x,y));
+    bd.position.set(box2d.coordPixelsToWorld(x, y));
     b = box2d.createBody(bd);
-    
+
     // Attached the shape to the body using a Fixture
-    b.createFixture(sd,1);
+    b.createFixture(sd, 1);
+
+    b.setUserData(this);
   }
 
   // Draw the boundary, if it were at an angle we'd have to do something fancier
@@ -51,12 +52,9 @@ class Boundary {
     float a = b.getAngle();
 
     pushMatrix();
-    translate(x,y);
+    translate(x, y);
     rotate(-a);
-    rect(0,0,w,h);
+    rect(0, 0, w, h);
     popMatrix();
   }
-
 }
-
-

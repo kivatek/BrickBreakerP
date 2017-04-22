@@ -1,4 +1,4 @@
-import shiffman.box2d.*;
+import shiffman.box2d.*; //<>// //<>//
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.joints.*;
 import org.jbox2d.collision.shapes.*;
@@ -10,6 +10,10 @@ import org.jbox2d.dynamics.contacts.*;
 Box2DProcessing box2d;
 ArrayList<Boundary> boundaries;
 ArrayList<Brick> bricks;
+Sphere sphere;
+
+float angle = PI/4;
+boolean shot = false;
 
 float boundaryWidth = 10;
 float brickWidth = 38;
@@ -45,10 +49,8 @@ void setup() {
       bricks.add(new Brick(x, y, brickWidth, brickHeight, 0));
     }
   }
-  //box = new Box(width/2,height/2);
 
-  // Make the spring (it doesn't really get initialized until the mouse is clicked)
-  //spring = new Spring();
+  sphere = new Sphere(width / 2, (height / 10) * 9, 10);
 }
 
 void mouseReleased() {
@@ -60,13 +62,10 @@ void mousePressed() {
 void draw() {
   background(255);
 
-  // We must always step through time!
   box2d.step();
 
-  // Always alert the spring to the new mouse position
-  //spring.update(mouseX,mouseY);
+  sphere.update();
 
-  // Draw the boundaries
   for (Boundary boundary : boundaries) {
     boundary.display();
   }
@@ -75,14 +74,55 @@ void draw() {
     brick.display();
   }
 
-  //// Draw the box
-  //box.display();
-  //// Draw the spring (it only appears when active)
-  //spring.display();
+  sphere.display();
+
+  for (int i = bricks.size()-1; i >= 0; i--) {
+    Brick brick = bricks.get(i);
+    if (brick.done()) {
+      bricks.remove(brick);
+    }
+  }
 }
 
 void beginContact(Contact cp) {
+  Fixture f1 = cp.getFixtureA();
+  Fixture f2 = cp.getFixtureB();
+
+  Body b1 = f1.getBody();
+  Body b2 = f2.getBody();
+
+  Object o1 = b1.getUserData();
+  Object o2 = b2.getUserData();
+
+  if (o1.getClass() == Sphere.class) {
+    if (o2.getClass() == Brick.class) {
+      Brick brick = (Brick) o2;
+      brick.requestDestroy();
+    }
+  }
+  if (o2.getClass() == Sphere.class) {
+    if (o1.getClass() == Brick.class) {
+      Brick brick = (Brick) o1;
+      brick.requestDestroy();
+    }
+  }
+  if (o1.getClass() == Boundary.class) {
+    Sphere p = (Sphere) o2;
+    p.change();
+  } else if (o2.getClass() == Boundary.class) {
+    Sphere p = (Sphere) o1;
+    p.change();
+  }
 }
 
 void endContact(Contact cp) {
+}
+
+void keyPressed() {
+  if (key == ' ') {
+    shot = true;
+    PVector force = PVector.fromAngle(angle);
+    Vec2 velocity = new Vec2(force.x, force.y);
+    sphere.applyVelocity(velocity);
+  }
 }
