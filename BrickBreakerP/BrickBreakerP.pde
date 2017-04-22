@@ -1,4 +1,4 @@
-import shiffman.box2d.*; //<>// //<>//
+import shiffman.box2d.*; //<>// //<>// //<>// //<>// //<>//
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.joints.*;
 import org.jbox2d.collision.shapes.*;
@@ -10,6 +10,7 @@ import org.jbox2d.dynamics.contacts.*;
 Box2DProcessing box2d;
 ArrayList<Boundary> boundaries;
 ArrayList<Brick> bricks;
+ArrayList<FxBrick> fxBricks;
 Sphere sphere;
 
 float angle = PI/4;
@@ -50,6 +51,8 @@ void setup() {
     }
   }
 
+  fxBricks = new ArrayList<FxBrick>();
+
   sphere = new Sphere(width / 2, (height / 10) * 9, 10);
 }
 
@@ -73,6 +76,9 @@ void draw() {
   for (Brick brick : bricks) {
     brick.display();
   }
+  for (FxBrick fxBrick : fxBricks) {
+    fxBrick.display();
+  }
 
   sphere.display();
 
@@ -81,6 +87,8 @@ void draw() {
     if (brick.done()) {
       bricks.remove(brick);
     }
+  }
+  for (int i = fxBricks.size()-1; i >= 0; i--) {
   }
 }
 
@@ -97,12 +105,14 @@ void beginContact(Contact cp) {
   if (o1.getClass() == Sphere.class) {
     if (o2.getClass() == Brick.class) {
       Brick brick = (Brick) o2;
+      beginFadeBrick(brick);
       brick.requestDestroy();
     }
   }
   if (o2.getClass() == Sphere.class) {
     if (o1.getClass() == Brick.class) {
       Brick brick = (Brick) o1;
+      beginFadeBrick(brick);
       brick.requestDestroy();
     }
   }
@@ -116,6 +126,13 @@ void beginContact(Contact cp) {
 }
 
 void endContact(Contact cp) {
+}
+
+void beginFadeBrick(Brick brick) {
+  if (brick.reqDestroy == false) {
+    FxBrick fxBrick = new FxBrick(brick.x, brick.y, brick.w, brick.h, brick.body.getAngle());
+    fxBricks.add(fxBrick);
+  }
 }
 
 void keyPressed() {

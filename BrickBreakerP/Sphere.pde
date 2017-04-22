@@ -6,12 +6,12 @@
 class Sphere {
 
   Body body;
-  float r;
+  float radius;
   color col;
 
   Sphere(float x, float y, float r_) {
-    r = r_;
-    body = makeBody(x, y, r);
+    radius = r_;
+    body = makeBody(x, y, radius);
     body.setUserData(this);
     col = color(175);
 
@@ -27,7 +27,7 @@ class Sphere {
 
   boolean done() {
     Vec2 pos = box2d.getBodyPixelCoord(body);
-    if (pos.y > height+r*2) {
+    if (pos.y > height+radius*2) {
       killBody();
       return true;
     }
@@ -53,8 +53,8 @@ class Sphere {
     fill(col);
     stroke(0);
     strokeWeight(1);
-    ellipse(0, 0, r*2, r*2);
-    line(0, 0, r, 0);
+    ellipse(0, 0, radius*2, radius*2);
+    line(0, 0, radius, 0);
     popMatrix();
   }
 
