@@ -41,20 +41,37 @@ void setup() {
 
   // Make bricks
   bricks = new ArrayList<Brick>();
-  for (int row = 0; row < 8; row++) {
+  for (int row = 0; row < 5; row++) {
     for (int column = 0; column < 10; column++) {
       float xOffset = (width - (brickOffsetX * 10)) / 2 + (brickWidth / 2);
       float yOffset = boundaryWidth + (brickHeight / 2) + 30;
       float x = column * brickOffsetX + xOffset;
       float y = row * brickOffsetY + yOffset;
-      bricks.add(new Brick(x, y, brickWidth, brickHeight, 0));
+      color col = color(0xdb, 0xe1, 0xdf);
+      switch (row) {
+      case 0:
+        col = color(0xff, 0x10, 0x15);
+        break;
+      case 1:
+        col = color(0xff, 0xff, 0x04);
+        break;
+      case 2:
+        col = color(0x0a, 0xc2, 0xfe);
+        break;
+      case 3:
+        col = color(0xfe, 0x0f, 0xff);
+        break;
+      case 4:
+        col = color(0x06, 0xff, 0x0f);
+        break;
+      }
+      bricks.add(new Brick(x, y, brickWidth, brickHeight, col, 0));
     }
   }
 
   fxBricks = new ArrayList<FxBrick>();
 
   sphere = new Sphere(width / 2, (height / 10) * 9, 10);
-  
 }
 
 void mouseReleased() {
@@ -64,7 +81,7 @@ void mousePressed() {
 }
 
 void draw() {
-  background(255);
+  background(0x13, 0x17, 0x95);
 
   box2d.step();
 

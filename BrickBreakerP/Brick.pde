@@ -7,14 +7,16 @@ class Brick {
   float h;
   // But we also have to make a body for box2d to know about it
   Body body;
+  color col;
 
   boolean reqDestroy;
 
-  Brick(float x_, float y_, float w_, float h_, float a) {
+  Brick(float x_, float y_, float w_, float h_, color c_, float a) {
     x = x_;
     y = y_;
     w = w_;
     h = h_;
+    col = c_;
     reqDestroy = false;
 
     PolygonShape sd = new PolygonShape();
@@ -48,7 +50,7 @@ class Brick {
   void display() {
     noFill();
     stroke(127);
-    fill(127);
+    fill(col);
     strokeWeight(1);
     rectMode(CENTER);
 
