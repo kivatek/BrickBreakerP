@@ -1,4 +1,4 @@
-import shiffman.box2d.*; //<>// //<>// //<>// //<>// //<>//
+import shiffman.box2d.*; //<>// //<>// //<>// //<>// //<>// //<>// //<>//
 import org.jbox2d.common.*;
 import org.jbox2d.dynamics.joints.*;
 import org.jbox2d.collision.shapes.*;
@@ -13,7 +13,7 @@ ArrayList<Brick> bricks;
 ArrayList<FxBrick> fxBricks;
 Sphere sphere;
 
-float angle = PI/4;
+float angle = PI/2;
 boolean shot = false;
 
 float boundaryWidth = 10;
@@ -41,7 +41,7 @@ void setup() {
 
   // Make bricks
   bricks = new ArrayList<Brick>();
-  for (int row = 0; row < 5; row++) {
+  for (int row = 0; row < 8; row++) {
     for (int column = 0; column < 10; column++) {
       float xOffset = (width - (brickOffsetX * 10)) / 2 + (brickWidth / 2);
       float yOffset = boundaryWidth + (brickHeight / 2) + 30;
@@ -54,6 +54,7 @@ void setup() {
   fxBricks = new ArrayList<FxBrick>();
 
   sphere = new Sphere(width / 2, (height / 10) * 9, 10);
+  
 }
 
 void mouseReleased() {
@@ -68,6 +69,9 @@ void draw() {
   box2d.step();
 
   sphere.update();
+  for (FxBrick fxBrick : fxBricks) {
+    fxBrick.update();
+  }
 
   for (Boundary boundary : boundaries) {
     boundary.display();
@@ -89,6 +93,10 @@ void draw() {
     }
   }
   for (int i = fxBricks.size()-1; i >= 0; i--) {
+    FxBrick fxBrick = fxBricks.get(i);
+    if (fxBrick.done()) {
+      fxBricks.remove(fxBrick);
+    }
   }
 }
 
@@ -138,7 +146,8 @@ void beginFadeBrick(Brick brick) {
 void keyPressed() {
   if (key == ' ') {
     shot = true;
-    PVector force = PVector.fromAngle(angle);
+    float d = angle + (random(-10, 10) / 180) * PI;
+    PVector force = PVector.fromAngle(d);
     Vec2 velocity = new Vec2(force.x, force.y);
     sphere.applyVelocity(velocity);
   }

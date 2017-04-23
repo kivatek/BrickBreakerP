@@ -13,8 +13,7 @@ class Sphere {
     radius = r_;
     body = makeBody(x, y, radius);
     body.setUserData(this);
-    col = color(175);
-
+    col = color(144, 175, 175, 255);
   }
 
   void killBody() {
@@ -22,7 +21,7 @@ class Sphere {
   }
 
   void change() {
-    col = color(255, 0, 0);
+    //col = color(255, 0, 0);
   }
 
   boolean done() {
@@ -36,7 +35,7 @@ class Sphere {
 
   void applyVelocity(Vec2 velocity) {
     velocity.normalize();
-    velocity = velocity.mul(50);
+    velocity = velocity.mul(60);
     body.setLinearVelocity(velocity);
   }
 
